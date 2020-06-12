@@ -1,0 +1,69 @@
+
+This is the project for LAQE (Life-time Air Quality Experience)
+
+The Air Quality System (AQS) of EPA generates air toxins data from sensors across the country. The data is not directly available due to quality consideration. However history data (about 330 GB) is deposited in Google Cloud Platform and available to extract with BigQuery. Since BigQuery impose an export file size limit of 1GB, the original datasets in the depository are sharded. In the end, about 300 shards ranging from 180 MB to 6 GB were transferred to S3. (Not sure why the 1 GB limit is not a hard one)
+
+Test cases were written to aggregate the data for the 'hap_hourly_summary.csv' (hap: hazardous air pollutants), the data are in /testsuite/test1 and testsuite/test2, and the code are in testsuite/test1.py and testsuite/test2.py.
+
+For the end user, zip code will be the primary input which requires mapping between the lat-long of zipcodes and those of the sensors in AQS. A simple logic of matching each zip code with the closest sensor. Test code is in testsuite/test3.py
+
+Pipeline
+1. Data Ingestion
+The AQS dataset is deposited on the Google Cloud Platform (GCP) and was extracted with BigQuery. Big tables are sharded to close to 1GB. The extracted datasets are:
+table_id	            row_count	    size_bytes	    bytes/row	# shards
+wind_hourly_summary	    208,548,444	    44,881,383,453	215	        50
+o3_hourly_summary	    213,366,228	    41,710,419,019	195	        8
+voc_hourly_summary	    150,205,635	    36,485,254,050	243	        25
+nonoxnoy_hourly_summary	148,702,556	    32,637,389,867	219	        6
+temperature_hourly_summary	143,477,384	32,047,409,122	223	        5
+so2_hourly_summary	    129,931,748	    27,392,786,956	211	        4
+co_hourly_summary	    95,812,978	    20,587,522,621	215	        3
+no2_hourly_summary	    89,191,188	    19,408,506,588	218	        4
+pm25_speciation_daily_summary	46,044,128	15,851,077,653	344	    18
+rh_and_dp_hourly_summary	65,009,833	14,750,357,739	227	        3
+pm25_nonfrm_hourly_summary	47,245,934	12,646,551,684	268	        3
+pm10_hourly_summary	    40,093,769	    9,683,866,766	242	        17
+pressure_hourly_summary	43,426,386	    8,800,983,192	203	        17
+voc_daily_summary	    24,808,862	    8,441,053,073	340	        17
+pm25_frm_hourly_summary	21,630,673	    5,556,892,358	257	        12
+so2_daily_summary	    11,235,283	    3,507,229,845	312	        8
+hap_daily_summary	    8,601,446	    2,936,856,124	341	        6
+o3_daily_summary	    9,192,036	    2,808,270,493	306	        6
+wind_daily_summary	    8,763,180	    2,723,525,874	311         6
+co_daily_summary	    8,233,871	    2,625,220,197	319	        3
+nonoxnoy_daily_summary	6,493,133	    2,090,650,487	322	        5
+temperature_daily_summary	6,017,246	1,931,891,954	321	        4
+pm25_frm_daily_summary	4,483,879	    1,626,927,420	363	        4
+
+Complementary data is also ingested from https://aqs.epa.gov/aqsweb/airdata/download_files.html, especially the datasets before 1990/1/1 and after 2018/1/1.
+
+2. Transformation
+
+The total number of rows in the EPA/aqs dataset is more than 1 billion. After transformation and aggregation, the dataset would be reduced to about 10 million rows. It was expanded again by joining with the zipcode dataset to about 90 million rows, because not every zip code has a sensor in it and zipcode-sensor location is a many-to-one relationship. Distributed computing using pyspark greatly shortened the runtime needed for the pipeline job.
+
+Zip code-geocenter lat-long data was obtained from http://federalgovernmentzipcodes.us. Alternatively it may be obtained as a python package 'uszipcode'
+
+The user's zip code dictates the cardinality of the primary search field. After preprocessing, the EPA/aqs dataset will need to be joined with the zip code dataset, based on the their geological locality similarity, which is implemented by geohash (a python module).
+
+3. Loading result into database
+
+To provide easy query for users, a PostgreSQL relational database was built with the following schema:
+CREATE TABLE airtoxin (aqsid SERIAL PRIMARY KEY, zip VARCHAR(6), year INT, month INT, dayornight BOOLEAN, toxin VARCHAR(50), average NUMERIC, unit VARCHAR(50), counts INT, distance VARCHAR(6));
+
+After loading the result into the PostgreSQL database, an index was created on the table based on the primary search criteria of zipcode. Sucn an index greatly accelerate the speed of query.
+
+It provides aggregated average concentration of airtoxins down to the month, without too much granularity of the day or the hour. It also enables the user to input two locations - one for his/her home zipcode at night, and the other his/her work place zipcode during the day. This might be significant if the user commutes between two locations with significantly different air quality.
+
+
+User Interface
+
+Flask framwork was used to build a lightweight user interface, where the user can input the location(zipcode) of his residence and/or work addresses, and expect an output of all the measured toxins concentrations for the time period the user specified.
+
+The web application is hosted out an EC2 instance and accessible on the internet at bit.ly/airlaqe
+
+Value Proposition of the Project
+
+This project has a clear goal of providing every person living in the US the information about his/her lifetime air quality experience (LAQE) based on the high quality EPA air toxins dataset.
+
+The air toxin levels are generally low, so they are not believed to have a significant impact on people's health. However, these are the air toxins that people breathe day in and day out, and they may have a long term health effect. Besides, there may be groups of peole who are sensitive to air pollutions/toxins, so the information provided by this project could offer an important clue to the cause of their health problems.
+
