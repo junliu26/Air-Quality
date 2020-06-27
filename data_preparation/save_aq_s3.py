@@ -1,3 +1,11 @@
+##############################################################
+# save_aq_s3.py
+# This python program download the air quality data
+#   in zipped csv files and save to S3
+# Website provided a file list in csv file
+#   Parse the list file first to get the files to download
+##############################################################
+
 import boto3
 import logging
 import requests
