@@ -1,3 +1,12 @@
+##############################################################
+# data_transformation.py
+# This python program transform the air quality data
+# Data input is the unzipped csv air quality file on S3
+# Data output is parquet file of reduced data on S3
+# Reduce the data to one data point per county per parameter
+# Return both average and max of the parameter
+##############################################################
+
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
 import pyspark.sql.types as T
@@ -103,6 +112,67 @@ def airq_xform_daily(spark, lgr, s3_path_in, s3_path_out, aq_category):
     return
 
 
+def airq_xform_hourly(spark, lgr, s3_path_in, s3_path_out, aq_category):
+
+    # Definition of csv datasets
+    file_in = s3_path_in + aq_category + "/*.csv"
+    file_out = s3_path_out + aq_category + ".parquet"
+
+    # User defined pySpark functions
+    udf_concat = F.udf(lambda cols: "".join([x if x is not None else "*" for x in cols]), T.StringType())
+    udf_mean = F.udf(mean, T.FloatType())
+
+    # Time start
+    t_start = datetime.now()
+
+    # Raw air quality data from spark, select the columns needed for later use
+    df_airq = spark.read.format("csv").option("header", "true").load(file_in) \
+        .select(F.col('State Code').alias('STATE_CODE'), F.col('County Code').alias('COUNTY_CODE'),
+                F.col('State Name').alias('STATE_LONG'), F.col('County Name').alias('COUNTY'),
+                F.col('Site Num').alias('SITE_NUM'),
+                F.col('Latitude').cast('float').alias('LATITUDE'),
+                F.col('Longitude').cast('float').alias('LONGITUDE'),
+                F.col('Date Local').alias('RECORD_DATE'),
+                F.col('Parameter Code').alias('PCODE'), F.col('Parameter Name').alias('PNAME'),
+                F.col('Sample Measurement').cast('float').alias('VALUE'))
+
+    # Calculate FIPS code
+    df_airq = df_airq.withColumn("STCOUNTYFP", udf_concat(F.array("STATE_CODE", "COUNTY_CODE")))\
+
+    # Get record count before reduce
+    df_airq_count = df_airq.count()
+
+    # Data transfomraiton on aggregation of multiple measurement on a same parameter
+    # across the county on a same day
+    df_airq_xform = df_airq.groupby("PCODE", "RECORD_DATE", "STCOUNTYFP").agg(F.first("STATE_CODE").alias("STATE_CODE"),
+        F.first("COUNTY_CODE").alias("COUNTY_CODE"),
+        F.first("STATE_LONG").alias("STATE_LONG"),
+        F.first("COUNTY").alias("COUNTY"),
+        F.countDistinct("SITE_NUM").alias("SITE_COUNT"),
+        udf_mean(F.collect_set("LATITUDE")).alias("LATITUDE"),
+        udf_mean(F.collect_set("LONGITUDE")).alias("LONGITUDE"),
+        F.avg("VALUE").alias("MEAN"),
+        F.max("VALUE").alias("MAX"),
+        F.count("*").alias("REC_COUNT"))
+
+    # Get record count after reduce
+    df_airq_xform_count = df_airq_xform.count()
+
+    # Save result to parquet
+    df_airq_xform.write.parquet(file_out)
+
+    # Time end
+    t_end = datetime.now()
+    duration = t_end - t_start
+    duration_in_s = duration.total_seconds()
+
+    message = "Transformation of " + aq_category + " completed, reduced dataset from " + str(df_airq_count) + " to " \
+              + str(df_airq_xform_count) + " in " + str(duration_in_s) + " seconds."
+    lgr.info(message)
+
+    return
+
+
 def main():
 
     # Definition of path
@@ -133,7 +203,7 @@ def main():
         if "daily" in aq_category:
             airq_xform_daily(spark, lgr, s3_path_in, s3_path_out, aq_category)
         elif "hourly" in aq_category:
-            pass
+            airq_xform_hourly(spark, lgr, s3_path_in, s3_path_out, aq_category)
 
     spark.stop()
 
