@@ -1,3 +1,12 @@
+##############################################################
+# unzip.py
+# This python program unzip the air quality data
+# Data input is zipped air quality csv file on S3
+# Data output is unzipped air quality csv file on S3
+# Reason for unzipping before transformation is
+#   Spark can only load csv files in gzip instead of zip 
+##############################################################
+
 import boto3
 import logging
 
