@@ -3,7 +3,7 @@ Living in the Bay Area, we suffered from bad air quality when wildfire happened.
 
 <hr/>
 
-![population_impacted_by_wildfire](/img/national.png=250x) ![population_impacted_by_wildfire](/img/CA.png=250x)
+![population_impacted_by_wildfire_US](/img/national.png =250x) ![population_impacted_by_wildfire_CA](/img/CA.png =250x)
 
 <hr/>
 
