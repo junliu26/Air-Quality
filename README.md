@@ -24,7 +24,8 @@ According to wikipeida, there are more than 35 times of wildfires that burned mo
 
 [2019 California wildfires](https://en.wikipedia.org/wiki/2019_California_wildfires)
 
-Smoke of wildfire not only 
+Smoke of wildfire not only cause death directly as linked, but also increase the hopitalization and has long term impact on people health.
+
 [US wildfire smoke deaths could double by 2100](https://www.sciencedaily.com/releases/2018/09/180910142417.htm)
 
 [The hidden cost of wildfires: Economic valuation of health effects of wildfire smoke exposure in Southern California](https://lynceans.org/wp-content/uploads/2020/01/Richardson-2012-Fire-smoke-in-future.pdf)
@@ -37,7 +38,7 @@ Among all the particle pollution produced by wildfire, PM 2.5 is the most import
 
 <hr/>
 
-![2016_USA_ShippingHeatmap](/img/Coast_Guard_Terrestrial_USEEZContinental_AllShips_2016_Heatmaps_PREVIEW.png)
+![PM 2.5](/img/PM2_5_enter.png)
 
 <hr/>
 
