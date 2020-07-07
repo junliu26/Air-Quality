@@ -1,5 +1,5 @@
 # Wildfire Impact
-Living in the Bay Area, we suffered from bad air quality when wildfire happened. According to newspaper, the lives we lost because of smokes caused by wildfire is more than the lives lost in wildfire itself.Estimate the populations impacted by high level of PM2.5 caused by wildfire.
+Living in the Bay Area, we suffered from bad air quality when wildfire happened. According to news report, the lives we lost because of smokes caused by wildfire is more than the lives lost in wildfire itself.This project aim to estimate the populations impacted by high level of PM2.5 caused by wildfire.
 
 ***
 
@@ -20,15 +20,26 @@ Living in the Bay Area, we suffered from bad air quality when wildfire happened.
 1. [Engineering Details](README.md#Engineering-Details)
 
 ## Overview
-Global trade relies on the constant movement of goods by maritime shipping, but the vessels involved generate a great deal of pollution. In addition to carbon emissions, they produce sulphate and nitrate pollutants and particulate matter. This pollution is known to affect air quality in port regions and a patchwork of regulations has unfolded to address the issue. See, for example:
+According to wikipeida, there are more than 35 times of wildfires that burned more than 1,000 acres (400 ha), or produced significant structural damage or casualties in California in 2019.
 
-[Sea Transport Air Pollution](https://www.intechopen.com/books/current-air-quality-issues/sea-transport-air-pollution)
+[2019 California wildfires](https://en.wikipedia.org/wiki/2019_California_wildfires)
 
-[Shipping emissions and their impacts on air quality in China](https://www.sciencedirect.com/science/article/pii/S0048969716327851)
+Smoke of wildfire not only 
+[US wildfire smoke deaths could double by 2100](https://www.sciencedaily.com/releases/2018/09/180910142417.htm)
 
-[Emissions of NOx, SO2, CO, and HCHO from commercial marine shipping during Texas Air Quality Study](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2009JD012094)
+[The hidden cost of wildfires: Economic valuation of health effects of wildfire smoke exposure in Southern California](https://lynceans.org/wp-content/uploads/2020/01/Richardson-2012-Fire-smoke-in-future.pdf)
 
-Automatic Identification System (AIS), which tracks the movement of ships using ship-to-shore radio, has been required on large commercial vessels in since 2002. With AIS, it is possible to inventory the emissions of ships while in port and to track trends in air quality in port areas related to shipping activity. This fundamentally a function of time spent in port, ship size, and operational protocols in port, which vary with regulations and shipping companies.
+Among all the particle pollution produced by wildfire, PM 2.5 is the most important and harmful to human health, that is the reason I pick it as parameter in this project. 
+
+[Particle Pollution From Wildfires Is a Big Problem for California](https://www.sierraclub.org/sierra/particle-pollution-wildfires-big-problem-for-california)
+
+[Wildfire-specific Fine Particulate Matter and Risk of Hospital Admissions in Urban and Rural Counties](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5130603/)
+
+<hr/>
+
+![2016_USA_ShippingHeatmap](/img/Coast_Guard_Terrestrial_USEEZContinental_AllShips_2016_Heatmaps_PREVIEW.png)
+
+<hr/>
 
 By tracking the time ships spend in ports and scaling by their size, Smoke Stack provides an estimate of ship emissions and the basis for tailored models to match with ship protocols and port regulations. Coupled with local air quality sensor data, Smoke Stack is a powerful platform for tracking emissions, evaluating mitigation efforts, and quantifying results.
 
