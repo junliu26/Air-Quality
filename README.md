@@ -1,5 +1,5 @@
 # Wildfire Impact
-Living in the Bay Area, we suffered from bad air quality when wildfire happened. According to news report, the lives we lost because of smokes caused by wildfire is more than the lives lost in wildfire itself.This project aim to estimate the populations impacted by high level of PM2.5 caused by wildfire.
+Living in the Bay Area, we suffered from bad air quality when wildfire happened. According to news report, the lives we lost because of smokes caused by wildfire is more than the lives lost in wildfire itself. This project aim to estimate the populations impacted by high level of PM2.5 caused by wildfire.
 
 ***
 
@@ -11,11 +11,11 @@ Living in the Bay Area, we suffered from bad air quality when wildfire happened.
 
 ## Table of Contents
 1. [Overview](README.md#Overview)
-1. [Data Sets](README.md#Data Sets)
-1. [Pseudo code](README.md#Pseudo code)
+1. [Data Sets](README.md#Data-Sets)
+1. [Pseudo code](README.md#Pseudo-code)
 1. [Tech Stack](README.md#Tech-Stack)
 1. [Engineering Details](README.md#Engineering-Details)
-1. [Next Step](README.md#Next Step)
+1. [Next Step](README.md#Next-Step)
 
 ## Overview
 According to wikipeida, there are more than 35 times of wildfires that burned more than 1,000 acres (400 ha), or produced significant structural damage or casualties in California in 2019.
