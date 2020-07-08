@@ -58,7 +58,7 @@ By tracking the time ships spend in ports and scaling by their size, Smoke Stack
 
 <hr/>
 
-![sudo code](/img/sudo code.png)
+![sudocode](/img/sudocode.png)
 
 <hr/>
 
