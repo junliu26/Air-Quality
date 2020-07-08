@@ -47,13 +47,28 @@ By tracking the time ships spend in ports and scaling by their size, Smoke Stack
 
 ## Data Sets
 
+<hr/>
+
+![dataset](/img/dataset.png)
+
+<hr/>
 
 
 ## Pseudo code
 
+<hr/>
+
+![sudo code](/img/sudo code.png)
+
+<hr/>
 
 ## Tech Stack
 
+<hr/>
+
+![pipeline](/img/pipeline.png)
+
+<hr/>
 
 ## Engineering Details
 The project was implemented in stages that reflect the directory structure of this repository: [ingestion](/ingestion), [data processing](/data-processing), [database build](/database-scripts), and [data exposure/front-end](/app). See README.md in those directories for more details. Also see [presentation slides](https://docs.google.com/presentation/d/1q7Qm1ukmDi7Bal3UjiNw1xl4ZdLYwZme4oiog2zXNJY/edit#slide=id.p).
