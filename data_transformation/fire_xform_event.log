@@ -1,0 +1,3 @@
+2020-07-27 07:31:30,767, fire_xform_event, INFO, Total number of record with valid county is 32434 in 55029 total records.
+2020-07-27 08:01:00,761, fire_xform_event, INFO, Fetched county information for 21642 out of 22595 missing records.
+2020-07-27 10:01:43,486, fire_xform_event, INFO, Data cleansing completed in 9032.695593 seconds.
