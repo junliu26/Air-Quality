@@ -96,8 +96,8 @@ def fire_data_cleansing(spark, lgr, s3_path_file_fire, s3_path_file_FIPS, s3_pat
     F.col('FIPS_NAME').alias('COUNTY'))
 
     # Only select fires with class above 'C'
-    #df_fire_raw = df_fire_raw.filter('FIRE_SIZE_CLASS NOT IN (\'A\', \'B\', \'C\')')
-    df_fire_raw = df_fire_raw.filter('FIRE_SIZE_CLASS NOT IN (\'A\', \'B\', \'C\', \'D\', \'E\', \'F\')')
+    df_fire_raw = df_fire_raw.filter('FIRE_SIZE_CLASS NOT IN (\'A\', \'B\', \'C\')')
+    #df_fire_raw = df_fire_raw.filter('FIRE_SIZE_CLASS NOT IN (\'A\', \'B\', \'C\', \'D\', \'E\', \'F\')')
     df_fire_raw_count = df_fire_raw.count()
 
     # Split the dataset into two, one with County name, one without
@@ -169,9 +169,6 @@ def main():
     s3_path_file_OUT = s3_path_out + file_OUT
 
     lgr = create_logger('fire_xform_event', 'log/fire_xform_event.log')
-
-    s3 = boto3.resource('s3')
-    #bucket = s3.Bucket(bucket_name)
 
     spark = SparkSession \
         .builder \
